@@ -86,12 +86,124 @@ char receive_byte()
         return msg;
 }
 
+char* itoa(int num, char* string)
+{
+    int i=1;
+        int num2=num;
+
+        if(num2 < 10)
+        {   string[0]=num%10+48;
+            string[1]='\0';
+            return string;
+        }
+    while(num2 > 9)
+    {
+
+        num2 /=10;
+            i++;
+        }
+
+        num2=num;
+        i=i-1;
+        while(num2>0)
+        {
+          string[i]= (num2 %10)+48;
+          num2/=10;
+          i--;
+        }
+
+    string[i]='\0';
+    return string;
+
+}
+int atoi(const char *string)
+{
+    int value = 0;
+    for (; *string != '\0'; ++string)
+        value = value*10 + *string - '0';
+    return value;
+}
+
+int strcmp ( const char * str1, const char * str2)
+{
+   int i=0;
+    while( (str1[i]!='\0' && str2[i]!='\0') )
+    {
+        if(str1[i]!=str2[i])
+        {
+            return (str1[i]>str2[i])?1:-1;
+        }
+        i++;
+    }
+
+    return 0;
+ }
 size_t strlen ( const char * str )
 {
     int count;
     for(count=0 ; str[count]!='\0';count++);
     return count;
  }
+
+void Instruction(char* str)
+{
+
+
+
+if( (strcmp("hello\n",str)) == 0 )
+{
+   fio_write(1, "\n\r'HELLO'",strlen("\n\r'HELLO'")+1 );
+}
+
+else if( (strcmp("echo ",str)) == 0 )
+{
+        int i=5;
+        fio_write(1, "\n\r",2 );
+
+        while(str[i] != '\n')
+        {fio_write(1, str+i,1 );
+
+         i++;
+    }
+}
+}
+/*
+else if( (strcmp("ps\n",str,4)) == 0)
+{
+        int i;
+        char string[6];
+        write(fdout, "\n\r", 3);
+        for(i = 0; i < task_count; i++)
+    {
+        itoa(tasks[i].pid, string);
+        write(fdout, string, strlen(string)+1);
+        write(fdout, "\t", 2);
+                if(tasks[i].status == TASK_READY){write(fdout, "TASK READY\t", 12);}
+                else if(tasks[i].status == TASK_WAIT_READ){write(fdout, "TASK_WAIT_READ\t", 16);}
+                else if(tasks[i].status == TASK_WAIT_WRITE){write(fdout, "TASK_WAIT_WRITE\t", 17);}
+                else if(tasks[i].status == TASK_WAIT_INTR){write(fdout, "TASK_WAIT_INTR\t", 16);}
+                else if(tasks[i].status == TASK_WAIT_TIME){write(fdout, "TASK_WAIT_TIME\t", 16);}
+                /*
+                if(strncmp("TASK_READY",tasks[i].status,10) ){write(fdout, "TASK READY\t", 12);}
+                else if(strncmp("TASK_WAIT_READ",tasks[i].status,14) ){write(fdout, "TASK_WAIT_READ\t", 16);}
+                else if(strncmp("TASK_WAIT_WRITE",tasks[i].status,15)){write(fdout, "TASK_WAIT_WRITE\t", 17);}
+                else if(strncmp("TASK_WAIT_INTR",tasks[i].status,14)){write(fdout, "TASK_WAIT_INTR\t", 16);}
+                else if(strncmp("TASK_WAIT_TIME",tasks[i].status,14)){write(fdout, "TASK_WAIT_TIME\t", 16);}
+
+        itoa(tasks[i].priority, string);
+        write(fdout, string, strlen(str)+1);
+        write(fdout, "\n\r",3);
+        }
+
+}
+else
+ {
+   write(fdout,"\n\rinput error,type help to get more information",48);
+ }
+
+}
+*/
+
 
 void and_shell()
 {
@@ -151,10 +263,10 @@ void and_shell()
 
                 if( (curr_char++) >0)
                 {
-                       // Instruction(str);
+                       Instruction(str);
                 }
                 //write(fdout, "\n\r", 3);
-
+                fio_write(1,"\n\r",2);
                 /* Once we are done building the response string, queue the
                  * response to be sent to the RS232 port.
                  */
