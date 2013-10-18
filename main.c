@@ -86,21 +86,88 @@ char receive_byte()
         return msg;
 }
 
-void read_romfs_task(void *pvParameters)
+size_t strlen ( const char * str )
 {
-	char buf[128];
-	size_t count;
-	int fd = fs_open("/romfs/test.txt", 0, O_RDONLY);
-	do {
-		//Read from /romfs/test.txt to buffer
-		count = fio_read(fd, buf, sizeof(buf));
+    int count;
+    for(count=0 ; str[count]!='\0';count++);
+    return count;
+ }
 
-		//Write buffer to fd 1 (stdout, through uart)
-		fio_write(1, buf, count);
-	} while (count);
+void and_shell()
+{
 
-	while (1);
+        char str[100];
+        char ch;
+        char ch_type[2];
+        char typein[]="and-freertos:";
+
+        int curr_char;
+        int done;
+
+        /* Prepare the response message to be queued. */
+
+
+        while (1) {
+
+                fio_write(1,typein,strlen(typein)+1);
+                curr_char = 0;
+                done = 0;
+                do {
+                        /* Receive a byte from the RS232 port (this call will
+                         * block). */
+
+                        ch=receive_byte();
+                        /* If the byte is an end-of-line type character, then
+                         * finish the string and inidcate we are done.
+                         */
+                        if (curr_char >= 98 || (ch == '\r') || (ch == '\n')) {
+                                str[curr_char] = '\n';
+                                str[curr_char+1] = '\0';
+                                done = -1;
+                                /* Otherwise, add the character to the
+                                 * response string. */
+                        }
+
+                        //backspace
+                        else if(ch == 127)
+                        {
+                                if(curr_char != 0)
+                            {
+                                        curr_char--;
+                                        fio_write(1,"\b \b",3);
+                                }
+
+
+                        }
+
+                        else {
+                                str[curr_char++] = ch;
+                                fio_write(1,&ch,1);
+
+                        }
+                } while (!done);
+
+
+
+                if( (curr_char++) >0)
+                {
+                       // Instruction(str);
+                }
+                //write(fdout, "\n\r", 3);
+
+                /* Once we are done building the response string, queue the
+                 * response to be sent to the RS232 port.
+                 */
+
+        }
+
+
 }
+
+
+
+
+
 
 int main()
 {
@@ -117,11 +184,12 @@ int main()
 	 * the RS232. */
 	vSemaphoreCreateBinary(serial_tx_wait_sem);
 	serial_rx_queue = xQueueCreate(1, sizeof(char));
+	xTaskCreate(and_shell,
+              (signed portCHAR *) "and_shell",
+              512 /* stack size */, NULL,
+              tskIDLE_PRIORITY + 5, NULL);
 
-	/* Create a task to output text read from romfs. */
-	xTaskCreate(read_romfs_task,
-	            (signed portCHAR *) "Read romfs",
-	            512 /* stack size */, NULL, tskIDLE_PRIORITY + 2, NULL);
+
 
 	/* Start running the tasks. */
 	vTaskStartScheduler();
