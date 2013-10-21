@@ -86,73 +86,15 @@ char receive_byte()
         return msg;
 }
 
-char* itoa(int num, char* string)
-{
-    int i=1;
-        int num2=num;
 
-        if(num2 < 10)
-        {   string[0]=num%10+48;
-            string[1]='\0';
-            return string;
-        }
-    while(num2 > 9)
-    {
-
-        num2 /=10;
-            i++;
-        }
-
-        num2=num;
-        i=i-1;
-        while(num2>0)
-        {
-          string[i]= (num2 %10)+48;
-          num2/=10;
-          i--;
-        }
-
-    string[i]='\0';
-    return string;
-
-}
-int atoi(const char *string)
-{
-    int value = 0;
-    for (; *string != '\0'; ++string)
-        value = value*10 + *string - '0';
-    return value;
-}
-
-int strcmp ( const char * str1, const char * str2)
-{
-   int i=0;
-    while( (str1[i]!='\0' && str2[i]!='\0') )
-    {
-        if(str1[i]!=str2[i])
-        {
-            return (str1[i]>str2[i])?1:-1;
-        }
-        i++;
-    }
-
-    return 0;
- }
-size_t strlen ( const char * str )
-{
-    int count;
-    for(count=0 ; str[count]!='\0';count++);
-    return count;
- }
-
-void Instruction(char* str)
+void shell(char* str)
 {
 
 
 
 if( (strcmp("hello\n",str)) == 0 )
 {
-   fio_write(1, "\n\r'HELLO'",strlen("\n\r'HELLO'")+1 );
+   fio_write(1, "\n\r'HELLO'",9 );
 }
 
 else if( (strcmp("echo ",str)) == 0 )
@@ -205,7 +147,7 @@ else
 */
 
 
-void and_shell()
+void type_in()
 {
 
         char str[100];
@@ -263,7 +205,7 @@ void and_shell()
 
                 if( (curr_char++) >0)
                 {
-                       Instruction(str);
+                       shell(str);
                 }
                 //write(fdout, "\n\r", 3);
                 fio_write(1,"\n\r",2);
@@ -296,8 +238,8 @@ int main()
 	 * the RS232. */
 	vSemaphoreCreateBinary(serial_tx_wait_sem);
 	serial_rx_queue = xQueueCreate(1, sizeof(char));
-	xTaskCreate(and_shell,
-              (signed portCHAR *) "and_shell",
+	xTaskCreate(type_in,
+              (signed portCHAR *) "type_in",
               512 /* stack size */, NULL,
               tskIDLE_PRIORITY + 5, NULL);
 

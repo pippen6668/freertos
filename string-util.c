@@ -67,3 +67,74 @@ char *strncpy(char *dest, const char *src, size_t n)
 	while (n-- && (*d++ = *s++));
 	return dest;
 }
+size_t strlen ( const char * str )
+{
+    int count;
+    for(count=0 ; str[count]!='\0';count++);
+    return count;
+}
+
+int strcmp ( const char * str1, const char * str2)
+{
+   int i=0;
+    while( (str1[i]!='\0' && str2[i]!='\0') )
+    {
+        if(str1[i]!=str2[i])
+        {
+            return (str1[i]>str2[i])?1:-1;
+        }
+        i++;
+    }
+
+    return 0;
+ }
+ char* itoa(int num, char* string)
+{
+    int i=1;
+        int num2=num;
+
+        if(num2 < 10)
+        {   string[0]=num%10+48;
+            string[1]='\0';
+            return string;
+        }
+    while(num2 > 9)
+    {
+
+        num2 /=10;
+            i++;
+        }
+
+        num2=num;
+        i=i-1;
+        while(num2>0)
+        {
+          string[i]= (num2 %10)+48;
+          num2/=10;
+          i--;
+        }
+
+    string[i]='\0';
+    return string;
+
+}
+int atoi(const char *string)
+{
+    int value = 0;
+    for (; *string != '\0'; ++string)
+        value = value*10 + *string - '0';
+    return value;
+}
+char * strcat ( char * dst, const char * src)
+{
+    int dst_l = strlen(dst);
+    int src_l = strlen(src);
+    int i;
+    for (i = 0; i<src_l; i++)
+    {
+        dst[dst_l+i]=src[i];
+    }
+    dst[dst_l+src_l]='\0';
+    return dst;
+}
+ 
