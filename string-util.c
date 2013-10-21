@@ -88,13 +88,14 @@ int strcmp ( const char * str1, const char * str2)
 
     return 0;
  }
+ 
  char* itoa(int num, char* string)
 {
     int i=1;
         int num2=num;
 
         if(num2 < 10)
-        {   string[0]=num%10+48;
+        {   string[0]=num+48;
             string[1]='\0';
             return string;
         }
@@ -106,18 +107,18 @@ int strcmp ( const char * str1, const char * str2)
         }
 
         num2=num;
-        i=i-1;
+	   string[i]='\0';
         while(num2>0)
         {
-          string[i]= (num2 %10)+48;
+          string[i-1]= (num2 %10)+48;
           num2/=10;
           i--;
         }
 
-    string[i]='\0';
     return string;
 
 }
+
 int atoi(const char *string)
 {
     int value = 0;
