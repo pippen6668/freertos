@@ -78,7 +78,7 @@ void send_byte(char ch)
 }
 char receive_byte()
 {
-        //serial_ch_msg msg;
+       
         char msg;
         /* Wait for a byte to be queued by the receive interrupts handler. */
         while (!xQueueReceive(serial_rx_queue, &msg, portMAX_DELAY));
@@ -108,43 +108,26 @@ else if( (strcmp("echo ",str)) == 0 )
          i++;
     }
 }
-}
-/*
-else if( (strcmp("ps\n",str,4)) == 0)
-{
-        int i;
-        char string[6];
-        write(fdout, "\n\r", 3);
-        for(i = 0; i < task_count; i++)
-    {
-        itoa(tasks[i].pid, string);
-        write(fdout, string, strlen(string)+1);
-        write(fdout, "\t", 2);
-                if(tasks[i].status == TASK_READY){write(fdout, "TASK READY\t", 12);}
-                else if(tasks[i].status == TASK_WAIT_READ){write(fdout, "TASK_WAIT_READ\t", 16);}
-                else if(tasks[i].status == TASK_WAIT_WRITE){write(fdout, "TASK_WAIT_WRITE\t", 17);}
-                else if(tasks[i].status == TASK_WAIT_INTR){write(fdout, "TASK_WAIT_INTR\t", 16);}
-                else if(tasks[i].status == TASK_WAIT_TIME){write(fdout, "TASK_WAIT_TIME\t", 16);}
-                /*
-                if(strncmp("TASK_READY",tasks[i].status,10) ){write(fdout, "TASK READY\t", 12);}
-                else if(strncmp("TASK_WAIT_READ",tasks[i].status,14) ){write(fdout, "TASK_WAIT_READ\t", 16);}
-                else if(strncmp("TASK_WAIT_WRITE",tasks[i].status,15)){write(fdout, "TASK_WAIT_WRITE\t", 17);}
-                else if(strncmp("TASK_WAIT_INTR",tasks[i].status,14)){write(fdout, "TASK_WAIT_INTR\t", 16);}
-                else if(strncmp("TASK_WAIT_TIME",tasks[i].status,14)){write(fdout, "TASK_WAIT_TIME\t", 16);}
 
-        itoa(tasks[i].priority, string);
-        write(fdout, string, strlen(str)+1);
-        write(fdout, "\n\r",3);
-        }
+
+else if( (strcmp("ps\n",str)) == 0)
+{
+        
+        fio_write(1, "\n\r",2 );
+		char str[100];
+		vTaskList(str);
+		fio_write(1,str,strlen(str)); 
+   
 
 }
 else
  {
-   write(fdout,"\n\rinput error,type help to get more information",48);
+   
+   fio_write(1, "\n\rinput error,type help to get more information",48 );
  }
 
 }
-*/
+
 
 
 void type_in()
@@ -207,7 +190,7 @@ void type_in()
                 {
                        shell(str);
                 }
-                //write(fdout, "\n\r", 3);
+                
                 fio_write(1,"\n\r",2);
                 /* Once we are done building the response string, queue the
                  * response to be sent to the RS232 port.
