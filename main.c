@@ -103,9 +103,11 @@ else if( (strcmp("echo ",str)) == 0 )
         fio_write(1, "\n\r",2 );
 
         while(str[i] != '\n')
-        {fio_write(1, str+i,1 );
-
-         i++;
+        {
+		 
+		 fio_write(1, str+i,1 );
+		 i++;
+		 
     }
 }
 
@@ -120,12 +122,48 @@ else if( (strcmp("ps\n",str)) == 0)
    
 
 }
-else
- {
-   
-   fio_write(1, "\n\rinput error,type help to get more information",48 );
- }
+else if ((strcmp("cat",str)) == 0)
+{
+    int i=4;
+	
+    char cat_bf[128];
+    cat_bf[0]='\0';
 
+	size_t count;
+
+	char str2[10]={};
+    int a=0;
+	
+	fio_write(1, "\r\n", 2);
+	while(str[i] != '\0')
+	{ 
+	  
+	  if(str[i] !='\n' && str[i] !=' ')
+	  { 
+	    str2[a]=str[i];
+		a++;	
+	  }
+	  
+	  else{ 
+	    
+	    str2[a]='\0';
+		char path[20]="/romfs/";
+	     strcat(path,str2);
+	     int fd = fs_open(path, 0, O_RDONLY);
+		 if(fd>0){
+	     do
+           {
+            count = fio_read(fd,cat_bf, sizeof( cat_bf));
+            fio_write(1, cat_bf, count);
+           }while (count);
+		   }
+		   fio_write(1, "\r", 1);
+		a=0;
+	  } 
+	  i++;
+	}
+
+}
 }
 
 
