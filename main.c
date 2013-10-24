@@ -162,9 +162,57 @@ else if ((strcmp("cat",str)) == 0)
 	  } 
 	  i++;
 	}
+}
+else if((strcmp("mmtest",str)) == 0)
+{   /*
+    int i, size;
+    char *p;
+
+    while (1) {
+        size = prng() & 0x7FF;
+        DBGPRINTF1("try to allocate %d bytes\n", size);
+		fio_printf(1, "try to allocate %d bytes\r\n", size);
+        p = (char *) pvPortMalloc(size);
+        DBGPRINTF1("malloc returned %p\n", p);
+        if (p == NULL) {
+            // can't do new allocations until we free some older ones
+            while (circbuf_size() > 0) {
+                // confirm that data didn't get trampled before freeing
+                struct slot foo = read_cb();
+                p = foo.pointer;
+                lfsr = foo.lfsr;  // reset the PRNG to its earlier state
+                size = foo.size;
+                printf("free a block, size %d\n", size);
+                for (i = 0; i < size; i++) {
+                    unsigned char u = p[i];
+                    unsigned char v = (unsigned char) prng();
+                    if (u != v) {
+                        DBGPRINTF2("OUCH: u=%02X, v=%02X\n", u, v);
+                        return 1;
+                    }
+                }
+                vPortFree(p);
+                if ((prng() & 1) == 0) break;
+            }
+        } else {
+            printf("allocate a block, size %d\n", size);
+            write_cb((struct slot){.pointer=p, .size=size, .lfsr=lfsr});
+            for (i = 0; i < size; i++) {
+                p[i] = (unsigned char) prng();
+            }
+        }
+    }
+    */
+	int a=123456789,b=5891;
+	fio_printf("number:%d",a);
+
 
 }
+
+
+
 }
+
 
 
 

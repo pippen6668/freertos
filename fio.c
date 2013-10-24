@@ -6,6 +6,7 @@
 #include "filesystem.h"
 #include "osdebug.h"
 #include "hash-djb2.h"
+#include <stdarg.h>
 
 static struct fddef_t fio_fds[MAX_FDS];
 
@@ -227,3 +228,34 @@ int sprintf ( char * str, const char * format, ... )//only support %s (string), 
     va_end(para);
     return strlen(str);
 }
+
+int fio_printf(char* str,...){
+  va_list para;
+  char buf[15];
+  
+  va_start(para, str);
+  int curr_pos=0;
+  
+  while(str[curr_pos]!='\0'){
+    if(  str[curr_pos]!='%' )
+    {  
+          send_byte('%');
+           }
+    else 
+	{
+      if(str[++curr_pos]=='d'){
+	  
+        itoa(va_arg(para, int),buf );
+        fio_write(1,buf,strlen(buf));
+      }
+	 }
+     fio_write(1,str+curr_pos,1);
+  
+  
+    
+  curr_pos++;
+ } 
+ va_end(para);
+
+}  
+  
