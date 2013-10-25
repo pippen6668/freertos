@@ -235,22 +235,31 @@ int fio_printf(char* str,...){
   
   va_start(para, str);
   int curr_pos=0;
-  
+  int b=0;
+  fio_write(1,"\n\r",2);
   while(str[curr_pos]!='\0'){
-    if(  str[curr_pos]!='%' )
-    {  
-          send_byte('%');
-           }
-    else 
-	{
-      if(str[++curr_pos]=='d'){
-	  
+    if(  str[curr_pos]=='%' )
+    {  if(str[++curr_pos]=='d'){
+	   
         itoa(va_arg(para, int),buf );
         fio_write(1,buf,strlen(buf));
-      }
-	 }
-     fio_write(1,str+curr_pos,1);
-  
+        } 
+           }
+    else 
+	{ /*
+      if(str[++curr_pos]=='d'){
+	   
+        itoa(va_arg(para, int),buf );
+        fio_write(1,buf,strlen(buf));
+      */
+	  fio_write(1,str+curr_pos,1);
+	  }
+	 
+	 
+	 //curr_pos++;
+	 
+     //fio_write(1,str+curr_pos,1);
+     
   
     
   curr_pos++;
