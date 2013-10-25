@@ -19,7 +19,7 @@ static void setup_hardware();
 volatile xSemaphoreHandle serial_tx_wait_sem = NULL;
 volatile xQueueHandle serial_rx_queue = NULL;
 
-#define CIRCBUFSIZE 5000
+#define CIRCBUFSIZE 1000
 unsigned int write_pointer, read_pointer;
 
 static unsigned int lfsr = 0xACE1;
@@ -144,7 +144,8 @@ void mmtest()
         size = prng() & 0x7FF;
         fio_printf("try to allocate %d bytes", size);
         p = (char *) pvPortMalloc(size);
-        //fio_printf("malloc returned %p\n", p);
+		
+        fio_printf("malloc returned 0x%x ", p);
         if (p == NULL) {
             // can't do new allocations until we free some older ones
             while (circbuf_size() > 0) {

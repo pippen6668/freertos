@@ -119,6 +119,35 @@ int strcmp ( const char * str1, const char * str2)
 
 }
 
+char *itoa2(int num, char* string2){
+        
+        int i=0;
+		int num2=num;
+        char numbox[20]="0123456789abcdef";
+		if(num==0){
+                string2[0]=num+48;
+				string2[1]='\0';
+                return string2;
+        }
+		while(num2 >0)
+        {
+
+        num2 /=16;
+        i++;
+        }
+       
+		num2=num;
+	   string2[i]='\0';
+        while(num2>0)
+        {  string2[i-1] = numbox[num2 % 16];
+			num2/=16;
+			i--;
+		}
+		
+        return string2;
+		
+} 
+
 int atoi(const char *string)
 {
     int value = 0;

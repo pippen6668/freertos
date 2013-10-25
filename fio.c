@@ -232,6 +232,9 @@ int sprintf ( char * str, const char * format, ... )//only support %s (string), 
 int fio_printf(char* str,...){
   va_list para;
   char buf[15];
+  char buf2[25];
+  int tmpint;
+  char *tmpcharp;
   
   va_start(para, str);
   int curr_pos=0;
@@ -239,16 +242,25 @@ int fio_printf(char* str,...){
   fio_write(1,"\n\r",2);
   while(str[curr_pos]!='\0'){
     if(  str[curr_pos]=='%' )
-    {  if(str[++curr_pos]=='d'){
-	   
-        itoa(va_arg(para, int),buf );
-        fio_write(1,buf,strlen(buf));
-        } 
-           }
+    {  if(str[curr_pos+1]=='d')
+	    {
+	     itoa(va_arg(para, int),buf );
+         fio_write(1,buf,strlen(buf));
+         ++curr_pos;
+		} 
+		
+		else if(str[curr_pos+1]=='x')
+		{
+         itoa2(va_arg(para, int),buf2);
+	     fio_write(1, buf2, strlen(buf2));
+		 ++curr_pos;
+		} 
+		
+    }
     else 
 	{ 
 	  fio_write(1,str+curr_pos,1);
-	  }
+	}
   curr_pos++;
  } 
  va_end(para);
