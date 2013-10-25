@@ -127,13 +127,43 @@ static struct slot read_cb(void)
 
 
 // Get a pseudorandom number generator from Wikipedia
+static int prng(void) __attribute__((naked));
 static int prng(void)
 {
-    static unsigned int bit;
+    
     /* taps: 16 14 13 11; characteristic polynomial: x^16 + x^14 + x^13 + x^11 + 1 */
-    bit  = ((lfsr >> 0) ^ (lfsr >> 2) ^ (lfsr >> 3) ^ (lfsr >> 5) ) & 1;
-    lfsr =  (lfsr >> 1) | (bit << 15);
-    return lfsr & 0xffff;
+   
+    
+	
+	__asm__(
+	         //ro=lfsr
+			 "mov r0, %[value]\n"
+			 
+			 //bit  = ((lfsr >> 0) ^ (lfsr >> 2) ^ (lfsr >> 3) ^ (lfsr >> 5) ) & 1;
+			 "eor r1, r0, r0, lsr #2 \n" 
+             "eor r1, r1, r0, lsr #3 \n" 
+             "eor r1, r1, r0, lsr #5 \n"
+			 "and r1, r1, #1         \n"
+			 
+			 // lfsr =  (lfsr >> 1) | (bit << 15);
+			 "lsl r1, r1, #15        \n" 
+             "orr r1, r1, r0, lsr #1 \n" 
+             "mov %[result], r1      \n"
+			 
+			 // lfsr & 0xFFFF
+			 "mov r0, r1, lsl #16    \n" 
+             "mov r0, r0, lsr #16    \n"
+			 
+			 //output operand
+			 : [result]  "=r" (lfsr)   
+             //input operand
+			 : [value] "r" (lfsr)   
+             //list of clobbered registers
+			 : "r0", "r1"             	
+
+			);
+    __asm__("bx lr\n");			
+		 
 }
 void mmtest()
 {   
