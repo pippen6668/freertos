@@ -246,22 +246,9 @@ int fio_printf(char* str,...){
         } 
            }
     else 
-	{ /*
-      if(str[++curr_pos]=='d'){
-	   
-        itoa(va_arg(para, int),buf );
-        fio_write(1,buf,strlen(buf));
-      */
+	{ 
 	  fio_write(1,str+curr_pos,1);
 	  }
-	 
-	 
-	 //curr_pos++;
-	 
-     //fio_write(1,str+curr_pos,1);
-     
-  
-    
   curr_pos++;
  } 
  va_end(para);
